@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Bartle&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motorsport Photography</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'BBH Bartle', sans-serif;
+            font-size: 29px;
+            color: white;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 0;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #ff6b6b;
+        }
+
+        .nav-link.active {
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        .section-title {
+            font-family: 'BBH Bartle', sans-serif;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #222;
+        }
+
+        .home-section {
+            padding-top: 0;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, #f8f9fa);
+            z-index: 1;
+        }
+
+        .center-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .over_layh1,
+        .over_layh2 {
+            font-family: 'BBH Bartle', sans-serif;
+            color: white;
+            text-shadow: 2px 2px 8px black;
+        }
+
+        .over_layh1 {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+
+        .over_layh2 {
+            font-size: 28px;
+        }
+
+        .events-section {
+            background: #f8f9fa;
+            padding-top: 0;
+        }
+
+        .events-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .event_card {
+            background: #fafafa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .event_card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .event_card:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .event_image {
+            flex: 1;
+            min-width: 400px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .event_image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event_content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .title_event {
+            font-family: 'BBH Bartle', sans-serif;
+            font-size: 32px;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .description_event {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .event_images_overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .event_images_overlay.active {
+            display: flex;
+        }
+
+        .event_images_container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .event_images_container img {
+            max-width: 400px;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .close_images_btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #fafafa;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close_images_btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .about-section {
+            background: #f8f9fa;
+        }
+
+        .about-text {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 18px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 15px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+            }
+
+            .over_layh1 {
+                font-size: 40px;
+            }
+
+            .over_layh2 {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .title_event {
+                font-size: 28px;
+            }
+
+            .event_card,
+            .event_card:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .event_image {
+                min-width: 100%;
+                height: 250px;
+            }
+
+            .event_content {
+                padding: 30px;
+            }
+
+            .event_images_container {
+                flex-direction: column;
+                max-width: 95%;
+            }
+
+            .event_images_container img {
+                max-width: 100%;
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">Motorsport</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#events" class="nav-link">Events</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <section id="home" class="section home-section">
+        <div class="image-container">
+            <img src="./pics/redbull_06.jpg" alt="Motorsport Photography" class="center-image">
+            <div class="overlay-content">
+                <h1 class="over_layh1">Motorsport</h1>
+                <h3 class="over_layh2">From the lens of a camera</h3>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="events" class="section events-section">
+        <div class="section-content">
+            <h2 class="section-title">Featured Events</h2>
+
+            <div class="events-container">
+                <div class="event_card" data-event="daytona">
+                    <div class="event_image">
+                        <img src="./pics/nascar1.webp" alt="Daytona 500">
+                    </div>
+                    <div class="event_content">
+                        <h1 class="title_event">Daytona 500</h1>
+                        <p class="description_event">NASCAR, short for the National Association for Stock Car Auto
+                            Racing,
+                            is a popular motorsport in the United States. The Daytona 500 is one of the most prestigious
+                            races in NASCAR, held annually at Daytona International Speedway. It's known as "The Great
+                            American Race" and marks the start of the NASCAR Cup Series season.</p>
+                    </div>
+                </div>
+
+                <div class="event_card" data-event="monaco">
+                    <div class="event_image">
+                        <img src="./pics/monaco_project1.webp" alt="Monaco Grand Prix">
+                    </div>
+                    <div class="event_content">
+                        <h1 class="title_event">Monaco Grand Prix</h1>
+                        <p class="description_event">The Monaco Grand Prix is one of the most prestigious Formula 1
+                            races,
+                            held annually on the Circuit de Monaco. Known for its narrow streets, tight corners, and
+                            glamorous setting in Monte Carlo, it's considered one of the most challenging tracks in
+                            motorsport. The race has been part of Formula 1 since 1950 and remains one of the most
+                            iconic
+                            events in racing.</p>
+                    </div>
+                </div>
+
+                <div class="event_card" data-event="indy">
+                    <div class="event_image">
+                        <img src="./pics/indy1.png" alt="Indy 500">
+                    </div>
+                    <div class="event_content">
+                        <h1 class="title_event">Indy 500</h1>
+                        <p class="description_event">The Indianapolis 500, also known as the Indy 500, is an annual
+                            automobile race held at Indianapolis Motor Speedway. It's considered one of the most
+                            prestigious motorsport events in the world. First held in 1911, it's the largest single-day
+                            sporting event globally and is part of the Triple Crown of Motorsport, along with the Monaco
+                            Grand Prix and Daytona 500.</p>
+                    </div>
+                </div>
+
+                <div class="event_card" data-event="lemans">
+                    <div class="event_image">
+                        <img src="./pics/image.png" alt="24 Hours of Le Mans">
+                    </div>
+                    <div class="event_content">
+                        <h1 class="title_event">24 Hours of Le Mans</h1>
+                        <p class="description_event">The 24 Hours of Le Mans is the world's oldest active endurance
+                            racing event. Held annually near the town of Le Mans, France, it's considered one of the
+                            most prestigious automobile races in the world. Teams compete to see who can drive the
+                            farthest
+                            in 24 hours, testing both speed and reliability.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="event_images_overlay" id="eventImagesOverlay">
+        <button class="close_images_btn" id="closeImagesBtn">×</button>
+        <div class="event_images_container" id="eventImagesContainer"></div>
+    </div>
+
+
+    <section id="about" class="section about-section">
+        <div class="section-content">
+            <h2 class="section-title">About Motorsport Photography</h2>
+            <div class="about-text">
+                <p>Motorsport photography captures the essence of speed, precision, and human achievement. These images
+                    tell the story of drivers pushing the limits of what's possible.</p>
+                <p>The Daytona 500, Monaco Grand Prix, and Indianapolis 500 are known as the Triple Crown of Motorsport.
+                    These three prestigious races represent the pinnacle of achievement in stock car racing, Formula 1,
+                    and open-wheel racing respectively. Winning all three is considered the ultimate accomplishment in
+                    motorsport history.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <p>&copy; 2024 Motorsport Photography.</p>
+    </footer>
+
+    <script>
+        var eventImages = {
+            daytona: ['./pics/nascar1.webp', './pics/nascar2.webp', './pics/nascar3.webp'],
+            monaco: ['./pics/monaco_project1.webp', './pics/lando-norris-mclaren12.webp', './pics/redbull_06.jpg'],
+            indy: ['./pics/indy1.png', './pics/indy2.png', './pics/patricio-o-ward-arrow-mclaren.webp'],
+            lemans: ['./pics/image.png', './pics/HH24.png', './pics/h24.png']
+        };
+
+        var eventCards = document.querySelectorAll('.event_card');
+        var overlay = document.getElementById('eventImagesOverlay');
+        var imagesContainer = document.getElementById('eventImagesContainer');
+        var closeBtn = document.getElementById('closeImagesBtn');
+
+        for (var i = 0; i < eventCards.length; i++) {
+            eventCards[i].addEventListener('click', function () {
+                var eventName = this.getAttribute('data-event');
+                showEventImages(eventName);
+            });
+        }
+
+        function showEventImages(eventName) {
+            var images = eventImages[eventName];
+            imagesContainer.innerHTML = '';
+
+            for (var i = 0; i < images.length; i++) {
+                var img = document.createElement('img');
+                img.src = images[i];
+                img.alt = eventName;
+                imagesContainer.appendChild(img);
+            }
+
+            overlay.classList.add('active');
+        }
+
+        closeBtn.addEventListener('click', function () {
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('scroll', function () {
+            var sections = document.querySelectorAll('.section');
+            var navLinks = document.querySelectorAll('.nav-link');
+            var navHeight = document.querySelector('.navbar').offsetHeight;
+            var current = '';
+
+            for (var i = 0; i < sections.length; i++) {
+                var sectionTop = sections[i].offsetTop;
+                if (window.pageYOffset >= sectionTop - navHeight - 100) {
+                    current = sections[i].getAttribute('id');
+                }
+            }
+
+            for (var i = 0; i < navLinks.length; i++) {
+                navLinks[i].classList.remove('active');
+                if (navLinks[i].getAttribute('href') === '#' + current) {
+                    navLinks[i].classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
