@@ -490,72 +490,66 @@
 
 
     <footer class="footer">
-        <p>&copy; 2024 Motorsport Photography.</p>
+        <p></p>
     </footer>
 
     <script>
-        var eventImages = {
+        const eventImages = {
             daytona: ['./pics/nascar1.webp', './pics/nascar2.webp', './pics/nascar3.webp'],
             monaco: ['./pics/monaco_project1.webp', './pics/lando-norris-mclaren12.webp', './pics/redbull_06.jpg'],
             indy: ['./pics/indy1.png', './pics/indy2.png', './pics/patricio-o-ward-arrow-mclaren.webp'],
             lemans: ['./pics/image.png', './pics/HH24.png', './pics/h24.png']
         };
 
-        var eventCards = document.querySelectorAll('.event_card');
-        var overlay = document.getElementById('eventImagesOverlay');
-        var imagesContainer = document.getElementById('eventImagesContainer');
-        var closeBtn = document.getElementById('closeImagesBtn');
+        const eventCards = document.querySelectorAll('.event_card');
+        const overlay = document.getElementById('eventImagesOverlay');
+        const imagesContainer = document.getElementById('eventImagesContainer');
+        const closeBtn = document.getElementById('closeImagesBtn');
 
-        for (var i = 0; i < eventCards.length; i++) {
-            eventCards[i].addEventListener('click', function () {
-                var eventName = this.getAttribute('data-event');
-                showEventImages(eventName);
+        eventCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const eventName = card.getAttribute('data-event');
+                const images = eventImages[eventName];
+
+                imagesContainer.innerHTML = '';
+
+                images.forEach(imageSrc => {
+                    const img = document.createElement('img');
+                    img.src = imageSrc;
+                    img.alt = eventName;
+                    imagesContainer.appendChild(img);
+                });
+
+                overlay.classList.add('active');
             });
-        }
+        });
 
-        function showEventImages(eventName) {
-            var images = eventImages[eventName];
-            imagesContainer.innerHTML = '';
-
-            for (var i = 0; i < images.length; i++) {
-                var img = document.createElement('img');
-                img.src = images[i];
-                img.alt = eventName;
-                imagesContainer.appendChild(img);
-            }
-
-            overlay.classList.add('active');
-        }
-
-        closeBtn.addEventListener('click', function () {
+        closeBtn.addEventListener('click', () => {
             overlay.classList.remove('active');
         });
 
-        overlay.addEventListener('click', function (e) {
+        overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 overlay.classList.remove('active');
             }
         });
 
-        window.addEventListener('scroll', function () {
-            var sections = document.querySelectorAll('.section');
-            var navLinks = document.querySelectorAll('.nav-link');
-            var navHeight = document.querySelector('.navbar').offsetHeight;
-            var current = '';
+        window.addEventListener('scroll', () => {
+            const navHeight = document.querySelector('.navbar').offsetHeight;
+            let current = '';
 
-            for (var i = 0; i < sections.length; i++) {
-                var sectionTop = sections[i].offsetTop;
-                if (window.pageYOffset >= sectionTop - navHeight - 100) {
-                    current = sections[i].getAttribute('id');
+            document.querySelectorAll('.section').forEach(section => {
+                if (window.pageYOffset >= section.offsetTop - navHeight - 100) {
+                    current = section.getAttribute('id');
                 }
-            }
+            });
 
-            for (var i = 0; i < navLinks.length; i++) {
-                navLinks[i].classList.remove('active');
-                if (navLinks[i].getAttribute('href') === '#' + current) {
-                    navLinks[i].classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
                 }
-            }
+            });
         });
     </script>
 </body>
